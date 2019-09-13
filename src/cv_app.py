@@ -6,8 +6,7 @@ from keras.models import load_model
 from keras.preprocessing import image
 
 # import model
-constant_path = "./arj_legacy/"
-model = load_model('arj_model_3.h5')
+model = load_model('../models/arj_model_3.h5')
 
 # Use Webcam
 cam = cv.VideoCapture(0)
