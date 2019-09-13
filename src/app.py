@@ -4,18 +4,16 @@ import os
 
 from keras.models import load_model
 from keras.preprocessing import image
+from defaults import font
 
 # import model
-model = load_model('../models/arj_model_3.h5')
+model = load_model("../models/gestures.h5")
 
 # Use Webcam
 cam = cv.VideoCapture(0)
 cv.namedWindow("test")
 
-font = cv.FONT_HERSHEY_SIMPLEX
-
-img_counter = 0
-current_gest = ""
+current_gest = "NA"
 
 while True:
     ret, frame = cam.read()
@@ -58,6 +56,5 @@ while True:
             
 
 cam.release()
-
 cv.destroyAllWindows()
 
