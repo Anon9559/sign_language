@@ -5,6 +5,7 @@
 
 data/sign_mnist_test.csv
 data/sign_mnist_train.csv
+legacy_data/
 
 
 # =============================
