@@ -13,12 +13,16 @@ model = load_model('arj_model_3.h5')
 cam = cv.VideoCapture(0)
 cv.namedWindow("test")
 
+font = cv.FONT_HERSHEY_SIMPLEX
 
 img_counter = 0
+current_gest = ""
 
 while True:
     ret, frame = cam.read()
+    cv.putText(frame, current_gest, (10, 50), font, 1, (255, 255, 255), 2, cv.LINE_AA)
     cv.imshow("test", frame)
+
     if not ret:
         break
     k = cv.waitKey(1)
@@ -36,19 +40,19 @@ while True:
         image_class = model.predict(test_image)
         
         if image_class[0][0] == 1:
-            print('Fist')
+            current_gest = 'Fist'
         elif image_class[0][1] == 1:
-            print('Index')
+            current_gest = 'Index'
         elif image_class[0][2] == 1:
-            print('Loser')
+            current_gest = 'Loser'
         elif image_class[0][3] == 1:
-            print('Okay')
+            current_gest = 'Okay'
         elif image_class[0][4] == 1:
-            print('Open_5')
+            current_gest = 'Open_5'
         elif image_class[0][5] == 1:
-            print('Peace')
+            current_gest = 'Peace'
         else:
-            print('not found')
+            current_gest = 'not found'
             
 
 cam.release()
