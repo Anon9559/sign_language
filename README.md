@@ -33,7 +33,7 @@ $ unzip sign_mnist_test.zip
 $ unzip sign_mnist_train.zip
 ```
 
-# Testing
+## Testing
 
 WIP
 
