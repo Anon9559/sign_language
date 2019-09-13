@@ -20,18 +20,23 @@ current_gest = ""
 
 while True:
     ret, frame = cam.read()
-    cv.putText(frame, current_gest, (10, 50), font, 1, (255, 255, 255), 2, cv.LINE_AA)
+
+    # write text on image
+    cv.putText(frame, current_gest, (10, 50), font, 1, (255, 255, 255), 
+            2, cv.LINE_AA)
     cv.imshow("test", frame)
 
     if not ret:
+        print("no camera found")
         break
+
     k = cv.waitKey(1)
 
     if k % 256 == 27:
         # ESC pressed
-        print("Escape hit, closing...")
         break
     elif k % 256 == 32:
+        # Space
         test_image = frame.copy()
         test_image = cv.resize(test_image, (64, 64))
         test_image = np.expand_dims(test_image, axis=0)
@@ -51,8 +56,6 @@ while True:
             current_gest = 'Open_5'
         elif image_class[0][5] == 1:
             current_gest = 'Peace'
-        else:
-            current_gest = 'not found'
             
 
 cam.release()
