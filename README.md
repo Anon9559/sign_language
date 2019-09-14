@@ -37,3 +37,7 @@ $ unzip sign_mnist_train.zip
 
 WIP
 
+# TODO:
+
+ [ ] Refactor ftps as decorator
+
