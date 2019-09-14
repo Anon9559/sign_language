@@ -39,5 +39,5 @@ WIP
 
 # TODO:
 
- [ ] Refactor ftps as decorator
+ - [ ] Refactor ftps as decorator
 
