@@ -1,48 +1,23 @@
+
 import cv2 as cv
 import numpy as np
 import os
 import time
 
-from keras.models import load_model
-from keras.preprocessing import image
 from defaults import font
 from defaults import gestures
+from keras.models import load_model
+from keras.preprocessing import image
+from statistics import mean
 
-NUM_FRAMES = 40
 
-# import model
+NUM_FRAMES = 20
+fps_avg = 0
+fps_tot = []
+
 model = load_model("../models/gestures.h5")
 
-# Use Webcam
-cam = cv.VideoCapture(0)
-cv.namedWindow("test")
-
-fps = 0
-fps_ind = 0
-fps_avg = []
-current_gest = "NA"
-
-while True:
-
-    fps_avg += [ fps_ind ]
-
-    if len(fps_avg) == NUM_FRAMES:
-        fps = round(sum(fps_avg) / NUM_FRAMES, 0)
-        fpg_avg = []
-
-    fps_start = time.time()
-
-    ret, frame = cam.read()
-
-    if not ret:
-        print("no camera found")
-        break
-
-    # write text on image
-    cv.putText(frame, current_gest, (70, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
-    cv.putText(frame, str(fps), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
-
-    cv.imshow("test", frame)
+def classify_gesture(frame):
 
     pred_image = frame.copy()
     pred_image = cv.resize(pred_image, (64, 64))
@@ -51,9 +26,36 @@ while True:
     image_class = model.predict(pred_image)
     try:
         # get index of classified value and lookup in gestures list
-        current_gest = gestures[image_class[0].tolist().index(1.0)]
+        gesture = gestures[image_class[0].tolist().index(1.0)]
     except ValueError:
-        current_gest = "NA"
+        gesture = "NA"
+    
+    return gesture
+
+
+cam = cv.VideoCapture(0)
+cv.namedWindow("test")
+
+while True:
+    timer_start = time.time()
+
+    if len(fps_tot) == NUM_FRAMES:
+        fps_avg = mean(fps_tot)
+        fps_tot = []
+
+    ret, frame = cam.read()
+    if not ret:
+        print("no camera found")
+        break
+
+    gesture = classify_gesture(frame)
+
+    cv.putText(frame, gesture, (80, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
+    cv.putText(frame, str(fps_avg), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
+    cv.imshow("test", frame)
+
+    timer_end = time.time()
+    fps_tot += [ round( 1 / (timer_end - timer_start), 0) ]
 
     k = cv.waitKey(1)
 
@@ -61,9 +63,6 @@ while True:
     if k % 256 == 27:
         break
 
-    fps_end = time.time()
-    fps_ind = 1 / (fps_end  - fps_start)
-            
-
 cam.release()
 cv.destroyAllWindows()
+
