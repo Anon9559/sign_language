@@ -6,6 +6,7 @@ import time
 from keras.models import load_model
 from keras.preprocessing import image
 from defaults import font
+from defaults import gestures
 
 NUM_FRAMES = 40
 
@@ -45,30 +46,21 @@ while True:
 
     cv.imshow("test", frame)
 
-
-    test_image = frame.copy()
-    test_image = cv.resize(test_image, (64, 64))
-    test_image = np.expand_dims(test_image, axis=0)
+    pred_image = frame.copy()
+    pred_image = cv.resize(pred_image, (64, 64))
+    pred_image = np.expand_dims(pred_image, axis=0)
     
-    image_class = model.predict(test_image)
-    
-    if image_class[0][0] == 1:
-        current_gest = 'Fist'
-    elif image_class[0][1] == 1:
-        current_gest = 'Index'
-    elif image_class[0][2] == 1:
-        current_gest = 'Loser'
-    elif image_class[0][3] == 1:
-        current_gest = 'Okay'
-    elif image_class[0][4] == 1:
-        current_gest = 'Open_5'
-    elif image_class[0][5] == 1:
-        current_gest = 'Peace'
+    image_class = model.predict(pred_image)
+    try:
+        # get index of classified value and lookup in gestures list
+        current_gest = gestures[image_class[0].tolist().index(1.0)]
+    except ValueError:
+        current_gest = "NA"
 
     k = cv.waitKey(1)
 
+    # Exit on ESC
     if k % 256 == 27:
-        # ESC pressed
         break
 
     fps_end = time.time()
