@@ -39,10 +39,8 @@ while True:
         break
 
     # write text on image
-    cv.putText(frame, current_gest, (70, 32), font, 1, (255, 255, 255), 
-            2, cv.LINE_AA)
-    cv.putText(frame, str(fps), (10, 30), font, 0.7, (0, 255, 255), 
-            2, cv.LINE_AA)
+    cv.putText(frame, current_gest, (70, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
+    cv.putText(frame, str(fps), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
 
     cv.imshow("test", frame)
 
