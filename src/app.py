@@ -12,13 +12,12 @@ from statistics import mean
 
 
 NUM_FRAMES = 20
-fps_avg = 0
-fps_tot = []
+fps_mean = 0
+fps_times = []
 
 model = load_model("../models/gestures.h5")
 
 def classify_gesture(frame):
-
     pred_image = frame.copy()
     pred_image = cv.resize(pred_image, (64, 64))
     pred_image = np.expand_dims(pred_image, axis=0)
@@ -39,9 +38,9 @@ cv.namedWindow("test")
 while True:
     timer_start = time.time()
 
-    if len(fps_tot) == NUM_FRAMES:
-        fps_avg = mean(fps_tot)
-        fps_tot = []
+    if len(fps_times) == NUM_FRAMES:
+        fps_mean = mean(fps_times)
+        fps_times = []
 
     ret, frame = cam.read()
     if not ret:
@@ -51,11 +50,11 @@ while True:
     gesture = classify_gesture(frame)
 
     cv.putText(frame, gesture, (80, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
-    cv.putText(frame, str(fps_avg), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
+    cv.putText(frame, str(fps_mean), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
     cv.imshow("test", frame)
 
     timer_end = time.time()
-    fps_tot += [ round( 1 / (timer_end - timer_start), 0) ]
+    fps_times += [ round( 1 / (timer_end - timer_start), 0) ]
 
     k = cv.waitKey(1)
 
