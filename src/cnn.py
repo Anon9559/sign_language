@@ -30,11 +30,11 @@ Labelling files correctly
 import os 
 gestures = ['fist','index','loser','okay','open_5','peace']
 for gesture in gestures:
-    dir_name = "/Users/arjun/documents/git/hand_gesture/arj_database/train/"
+    dir_name = "/Users/arjun/documents/git/sign_language/legacy_data/train/"
     dir_name = dir_name + gesture + '/'
     test = os.listdir(dir_name)
     os.chdir(dir_name)
-    counter = 0 
+    counter = 2000 
     for subdir,dirs,files in os.walk(dir_name):
         for file in files:
             counter+=1
@@ -46,7 +46,7 @@ for gesture in gestures:
 Moved random 30 files from each trainin folder into its respective test 
 folder using the linux command below:
     
-shuf -n 30 -e * | xargs -i mv {} ~/Documents/git/hand_gesture/arj_database/test/peace/
+shuf -n 30 -e * | xargs -i mv {} ~/Documents/git/sign_language/legacy_data//fist/
 
 Run this in each training folder and it moves 30 test images over to their folders
 """
@@ -59,6 +59,9 @@ Building the CNN
 from keras.models import Sequential
 from keras.layers import Convolution2D
 from keras.layers import MaxPooling2D
+from keras.layers import BatchNormalization
+from keras.layers import Activation
+from keras.layers import Dropout
 from keras.layers import Flatten
 from keras.layers import Dense     
 #%%
@@ -75,52 +78,41 @@ Convolution.
     reduce CPU load. 64x64 dimension.
     If using Theano backend should be input_shape = (3,64,64). We're using TF backend.
     Activation function ReLU to reduce nonlinearity.
- 
-"""
-classifier.add(Convolution2D(32,(3,3),input_shape=(64,64,3),activation = 'relu'))
-#%%
-"""
 Pooling.
 -In general we take 2x2 as it keeps the information.
 -Reduce size of filter maps (div by 2). Reduces complexity of model 
-    without reducing performacne
+    without reducing performacne    
+ 
 """
-classifier.add(MaxPooling2D(pool_size = (2,2)))     
+# Convolution 1
+classifier.add(Convolution2D(64,(3,3),input_shape=(64,64,3)))
+classifier.add(BatchNormalization())
+classifier.add(Activation('relu'))
+classifier.add(MaxPooling2D(pool_size = (2,2)))
+classifier.add(Dropout(0.2))
 
-#%%
-"""
-2nd convolutional layer
-"""
-classifier.add(Convolution2D(32,(3,3),activation = 'relu'))
-classifier.add(MaxPooling2D(pool_size = (2,2)))  
+# Convolution 2
+classifier.add(Convolution2D(128,(3,3)))
+classifier.add(BatchNormalization())
+classifier.add(Activation('relu'))
+classifier.add(MaxPooling2D(pool_size = (2,2)))
+classifier.add(Dropout(0.2))  
 
-#%%
-"""
-Flattening.
-Flattem feature maps in pooling layer. Gets ready to go into ANN
-"""
+# Convolution 3
+classifier.add(Convolution2D(128,(3,3)))
+classifier.add(BatchNormalization())
+classifier.add(Activation('relu'))
+classifier.add(MaxPooling2D(pool_size = (2,2)))
+classifier.add(Dropout(0.2))  
+
+# Flattening
 classifier.add(Flatten())
-#%%
-"""
-Full connection.
--units is how many nodes in the layer. Good to mess around with               
-this
-- First layer is the hidden layer.
-- Second layer is the output layer. Using softmax function because 
-we have > 2 output possibilities. If it was a binary classifier we'd use sigmoid.
 
-"""
-# Should 2nd one be units 11 or 1? 99% certain it should be 11, as I have 11 
-# classes.
+# Fully connected layer
 classifier.add(Dense(activation = 'relu', units=128 ))
 classifier.add(Dense(activation = 'softmax', units=6 ))
 #%%
-"""
-Compiling
-- First param = optimiser (for choosing SGD)
-- second is the loss function. If had a binary out come using binary cross e
-- Third = performacne metric
-"""
+# Compiling.
 classifier.compile(optimizer = 'adam', loss = 'categorical_crossentropy',
                    metrics = ['accuracy'])
 #%%
@@ -136,14 +128,14 @@ test_datagen = ImageDataGenerator(rescale=1./255)
 #%%
 # Identifies training set and runs transforms.
 training_set = train_datagen.flow_from_directory(
-        'C:/Users/arjun/Documents/git/hand_gesture/arj_database/train',
+        'C:/Users/arjun/Documents/git/sign_language/legacy_data/train',
         target_size=(64, 64),
         batch_size=32,
         class_mode='categorical')
 #%%
 # Identifies test set and runs transforms.
 test_set = test_datagen.flow_from_directory(
-        'C:/Users/arjun/Documents/git/hand_gesture/arj_database/test',
+        'C:/Users/arjun/Documents/git/sign_language/legacy_data/test',
         target_size=(64, 64), # Expects 64 x 64 images
         batch_size=32,
         class_mode='categorical')
@@ -151,16 +143,13 @@ test_set = test_datagen.flow_from_directory(
 # Fit and test.
 classifier.fit_generator(
         training_set,
-        steps_per_epoch=3180,
+        steps_per_epoch=3880,
         epochs=15,
         validation_data=test_set,
-        validation_steps=360)
-#%%
+        validation_steps=450)
 # Save model 
-classifier.save('hand_gesture_arj_model_3.h5')
-#%%
-# Save model weights 
-classifier.save_weights('hand_gesture_arj_model_3_weights.h5')
+classifier.save('model_14_09.h5')
+classifier.save_weights('model_14_09_weights.h5')
 #%%
 # Load the model.
 from keras.models import load_model
