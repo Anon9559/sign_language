@@ -8,7 +8,7 @@ gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 gray = cv.equalizeHist(gray)
 
 # Detect hands using classifier.
-hand_cascade = cv.CascadeClassifier('../data/aGest.xml')
+hand_cascade = cv.CascadeClassifier('../haar/palm.xml')
 hands = hand_cascade.detectMultiScale(img)
 
 # Draw bounding boxes round detected hands.
