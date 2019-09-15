@@ -1,14 +1,13 @@
 
 import cv2 as cv
 import numpy as np
-import os
-import time
 
 from defaults import font
 from defaults import gestures
 from keras.models import load_model
 from keras.preprocessing import image
 from statistics import mean
+from time import time
 
 
 NUM_FRAMES = 20
@@ -24,7 +23,7 @@ def classify_gesture(frame):
     
     image_class = model.predict(pred_image)
     try:
-        # get index of classified value and lookup in gestures list
+        # finds index of classified gesture
         gesture = gestures[image_class[0].tolist().index(1.0)]
     except ValueError:
         gesture = "NA"
@@ -36,10 +35,10 @@ cam = cv.VideoCapture(0)
 cv.namedWindow("test")
 
 while True:
-    timer_start = time.time()
+    timer_start = time()
 
     if len(fps_times) == NUM_FRAMES:
-        fps_mean = mean(fps_times)
+        fps_mean = int(mean(fps_times))
         fps_times = []
 
     ret, frame = cam.read()
@@ -49,11 +48,11 @@ while True:
 
     gesture = classify_gesture(frame)
 
-    cv.putText(frame, gesture, (80, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
+    cv.putText(frame, gesture, (50, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
     cv.putText(frame, str(fps_mean), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
     cv.imshow("test", frame)
 
-    timer_end = time.time()
+    timer_end = time()
     fps_times += [ round( 1 / (timer_end - timer_start), 0) ]
 
     k = cv.waitKey(1)
