@@ -26,7 +26,11 @@ category_index = label_map.create_category_index(categories)
 
 # Load a frozen infrerence graph into memory
 def load_inference_graph():
+    """ Load a froxen inference grap into memory
 
+    Returns:
+      Tuple with detection graph and sess
+    """
     detection_graph = tf.compat.v1.Graph()
 
     with detection_graph.as_default():
