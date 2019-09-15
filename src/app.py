@@ -15,7 +15,7 @@ NUM_FRAMES = 20
 fps_mean = 0
 fps_times = []
 
-model = load_model("../models/gestures.h5")
+model = load_model("../models/model_14_09.h5")
 
 def classify_gesture(frame):
     pred_image = frame.copy()
