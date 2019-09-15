@@ -40,4 +40,6 @@ WIP
 # TODO:
 
  - [ ] Refactor ftps as decorator
+ - [ ] Get Haar classifier working
+ - [ ] Reevaluate CNN architecture
 
