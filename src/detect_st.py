@@ -20,7 +20,7 @@ while True:
         print("Error converting to RGB")
 
     boxes, scores = detect_objects(frame, detection_graph, sess)
-    bounding_box(frame, scores, boxes) # draw boxes
+    bounding_box(frame, boxes, scores) # draw boxes
 
     cv.imshow('Single-Threaded Detection', cv.cvtColor(frame, cv.COLOR_RGB2BGR))
 

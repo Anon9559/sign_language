@@ -9,16 +9,16 @@ from keras.preprocessing import image
 from statistics import mean
 from time import time
 
-from handtracking.utils.detect import load_inference_graph
-from handtracking.utils.detect import detect_objects
-from handtracking.utils.draw import bounding_box
-from handtracking.utils.draw import crop
+from utils.detect import load_inference_graph
+from utils.detect import detect_objects
+from utils.draw import bounding_box
+from utils.draw import crop
 
 NUM_FRAMES = 20
 fps_mean = 0
 fps_times = []
 
-model = load_model("../models/model_14_09.h5")
+model = load_model("./models/model_14_09.h5")
 
 def classify_gesture(frame):
     pred_image = frame.copy()

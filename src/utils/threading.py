@@ -13,7 +13,7 @@ def worker(input_q, output_q, cap_params, frame_processed):
         frame = input_q.get()
         if (frame is not None):
             boxes, scores = detect_objects(frame, detection_graph, sess)
-            bounding_box(frame, scores, boxes)
+            bounding_box(frame, boxes, scores)
             output_q.put(frame) # add annotaded frame
             frame_processed += 1
         else:
