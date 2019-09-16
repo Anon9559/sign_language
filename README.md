@@ -42,4 +42,4 @@ WIP
  - [ ] Refactor ftps as decorator
  - [ ] Get Haar classifier working
  - [ ] Reevaluate CNN architecture
-
+ - [ ] Arj to enable CUDA/GPU on PC and retrain model using 128x128 image size
