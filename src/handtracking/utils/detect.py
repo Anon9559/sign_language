@@ -4,15 +4,15 @@ import cv2 as cv
 import numpy as np
 import tensorflow as tf
 
-from utils import label_map
+from . import label_map
 
 
 detection_graph = tf.Graph()
 
 # score threshold for showing bounding boxes.
 
-PATH_TO_CKPT = './models/frozen_inference_graph.pb'
-PATH_TO_LABELS = './models/hand_label_map.pbtxt'
+PATH_TO_CKPT = './handtracking/models/frozen_inference_graph.pb'
+PATH_TO_LABELS = './handtracking/models/hand_label_map.pbtxt'
 NUM_CLASSES = 1
 
 # load label map

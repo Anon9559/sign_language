@@ -9,6 +9,10 @@ from keras.preprocessing import image
 from statistics import mean
 from time import time
 
+from handtracking.utils.detect import load_inference_graph
+from handtracking.utils.detect import detect_objects
+from handtracking.utils.draw import bounding_box
+from handtracking.utils.draw import crop
 
 NUM_FRAMES = 20
 fps_mean = 0
@@ -35,6 +39,8 @@ def classify_gesture(frame):
 cam = cv.VideoCapture(0)
 cv.namedWindow("test")
 
+dg, sess = load_inference_graph()
+
 while True:
     timer_start = time()
 
@@ -46,6 +52,10 @@ while True:
     if not ret:
         print("no camera found")
         break
+    
+    boxes, scores = detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB), dg, sess)
+    bounding_box(frame, boxes, scores)
+    regions = crop(frame, boxes, scores, score=0.9)
 
     gesture = classify_gesture(frame)
 
