@@ -37,7 +37,7 @@ def classify_gesture(frame):
 
 
 cam = cv.VideoCapture(0)
-cv.namedWindow("test")
+cv.namedWindow("main")
 
 dg, sess = load_inference_graph()
 
@@ -54,14 +54,14 @@ while True:
         break
     
     boxes, scores = detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB), dg, sess)
-    bounding_box(frame, boxes, scores)
     regions = crop(frame, boxes, scores, score=0.9)
+    bounding_box(frame, boxes, scores)
 
     gesture = classify_gesture(frame)
 
     cv.putText(frame, gesture, (50, 32), font, 1, (255, 255, 255), 2, cv.LINE_AA)
     cv.putText(frame, str(fps_mean), (10, 30), font, 0.7, (0, 255, 255), 2, cv.LINE_AA)
-    cv.imshow("test", frame)
+    cv.imshow("main", frame)
 
     timer_end = time()
     fps_times += [ round( 1 / (timer_end - timer_start), 0) ]
