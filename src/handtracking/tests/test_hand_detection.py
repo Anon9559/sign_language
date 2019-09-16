@@ -16,5 +16,3 @@ class TestHandDetection(unittest.TestCase):
         boxes, scores = detect_objects(self.img, dg, sess)
         self.assertTrue(scores[0] > 0.05)
 
-        
-
