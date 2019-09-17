@@ -1,51 +1,46 @@
 
-import cv2 as cv
+import threading
+import cv2
 
-from threading import Thread
 
+class VideoCaptureThreading:
+    def __init__(self, src=0, width=640, height=480):
+        self.src = src
+        self.cap = cv2.VideoCapture(self.src)
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
+        self.grabbed, self.frame = self.cap.read()
+        self.started = False
+        self.read_lock = threading.Lock()
 
-class WebcamVideoStream:
-    '''
-    Threaded Camera input
-
-    https://www.pyimagesearch.com/2017/02/06/faster-video-file-fps-with-cv-videocapture-and-opencv/
-    '''
-    def __init__(self, src, width, height):
-        # initialize the video camera stream and read the first frame
-        # from the stream
-        self.stream = cv.VideoCapture(src)
-        self.stream.set(cv.CAP_PROP_FRAME_WIDTH, width)
-        self.stream.set(cv.CAP_PROP_FRAME_HEIGHT, height)
-        (self.grabbed, self.frame) = self.stream.read()
-
-        # initialize the variable used to indicate if the thread should
-        # be stopped
-        self.stopped = False
+    def set(self, var1, var2):
+        self.cap.set(var1, var2)
 
     def start(self):
-        # start the thread to read frames from the video stream
-        Thread(target=self.update, args=()).start()
+        if self.started:
+            print('[!] Threaded video capturing has already been started.')
+            return None
+        self.started = True
+        self.thread = threading.Thread(target=self.update, args=())
+        self.thread.start()
         return self
 
     def update(self):
-        # keep looping infinitely until the thread is stopped
-        while True:
-            # if the thread indicator variable is set, stop the thread
-            if self.stopped:
-                return
-
-            # otherwise, read the next frame from the stream
-            (self.grabbed, self.frame) = self.stream.read()
+        while self.started:
+            grabbed, frame = self.cap.read()
+            with self.read_lock:
+                self.grabbed = grabbed
+                self.frame = frame
 
     def read(self):
-        # return the frame most recently read
-        return self.frame
-
-    def size(self):
-        # return size of the capture device
-        return self.stream.get(3), self.stream.get(4)
+        with self.read_lock:
+            frame = self.frame.copy()
+            grabbed = self.grabbed
+        return grabbed, frame
 
     def stop(self):
-        # indicate that the thread should be stopped
-        self.stopped = True
+        self.started = False
+        self.thread.join()
 
+    def __exit__(self, exec_type, exc_value, traceback):
+        self.cap.release()
