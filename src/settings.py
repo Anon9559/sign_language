@@ -41,7 +41,7 @@ PATH_TO_LABELS = './models/hand_label_map.pbtxt'
 NUM_CLASSES = 1
 
 # multi threaded hand detector number of worker in worker pool
-WORKERS = 4
+WORKERS = 2
 
 # multi threaded hand detector que size
 QUE_SIZE = 5

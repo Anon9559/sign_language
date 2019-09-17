@@ -8,6 +8,7 @@ from time import time
 
 from utils.draw import bounding_box
 from utils.draw import crop
+from utils.camera import VideoCaptureThreading
 
 from detector import Detector, MultiThreadedDetector
 
@@ -15,10 +16,12 @@ NUM_FRAMES = 20
 fps_mean = 0
 fps_times = []
 
-cam = cv.VideoCapture(0)
-cv.namedWindow("main")
+cap = VideoCaptureThreading()
+cap.start()
 
-detector = Detector()
+cv.namedWindow("main")
+detector = MultiThreadedDetector() # slightly better performance 1-2 fps
+# detector = Detector()
 
 while True:
     timer_start = time()
@@ -27,15 +30,17 @@ while True:
         fps_mean = int(mean(fps_times))
         fps_times = []
 
-    ret, frame = cam.read()
+    ret, frame = cap.read()
     if not ret:
         print("no camera found")
         break
-    
-    boxes, scores = detector.detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB))
+
+    # run detection every other frame, worth looking into iterpolative models
+    if len(fps_times) % 2 ==0:
+        boxes, scores = detector.detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB))
     
     # detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB), dg, sess)
-    regions = crop(frame, boxes, scores, score=0.9)
+    regions = crop(frame, boxes, scores, score=0.5)
     bounding_box(frame, boxes, scores)
 
     # gesture = classify_gesture(frame)
@@ -53,6 +58,7 @@ while True:
     if k % 256 == 27:
         break
 
-cam.release()
+cap.stop()
+# detector.terminate() # multi threaded
 cv.destroyAllWindows()
 
