@@ -26,11 +26,11 @@ while True:
         print("no camera found")
         break
 
-    if fps.nbf % 3 == 0:
+    if fps.nbf % 2 == 0:
         boxes, scores = detector.detect_objects(cv.cvtColor(frame, 4))
 
     crop(frame, boxes, scores)
-    bounding_box(frame, boxes, scores, threshold=0.1, label=True)
+    bounding_box(frame, boxes, scores, threshold=0.2, label=True)
 
     # gesture = classify_gesture(frame)
     # cv.putText(frame, gesture, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
