@@ -2,58 +2,45 @@
 import cv2 as cv
 import numpy as np
 
+from detector import Detector, MultiThreadedDetector
 from settings import FONT
-from statistics import mean
-from time import time
-
+from utils.camera import VideoCaptureThreading
 from utils.draw import bounding_box
 from utils.draw import crop
-from utils.camera import VideoCaptureThreading
+from utils.fps import Fps
 
-from detector import Detector, MultiThreadedDetector
-
-NUM_FRAMES = 20
-fps_mean = 0
-fps_times = []
 
 cap = VideoCaptureThreading()
 cap.start()
+fps = Fps()
 
 cv.namedWindow("main")
-detector = MultiThreadedDetector() # slightly better performance 1-2 fps
-# detector = Detector()
+# detector = MultiThreadedDetector() # slightly better performance 1-2 fps
+detector = Detector()
+
 
 while True:
-    timer_start = time()
-
-    if len(fps_times) == NUM_FRAMES:
-        fps_mean = int(mean(fps_times))
-        fps_times = []
-
     ret, frame = cap.read()
+
     if not ret:
         print("no camera found")
         break
 
-    # run detection every other frame, worth looking into iterpolative models
-    if len(fps_times) % 2 ==0:
-        boxes, scores = detector.detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB))
-    
-    # detect_objects(cv.cvtColor(frame, cv.COLOR_BGR2RGB), dg, sess)
-    regions = crop(frame, boxes, scores, score=0.5)
-    bounding_box(frame, boxes, scores)
+    if fps.nbf % 3 == 0:
+        boxes, scores = detector.detect_objects(cv.cvtColor(frame, 4))
+
+    crop(frame, boxes, scores)
+    bounding_box(frame, boxes, scores, threshold=0.1, label=True)
 
     # gesture = classify_gesture(frame)
-
     # cv.putText(frame, gesture, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
-    cv.putText(frame, str(fps_mean), (10, 30), FONT, 0.7, (0, 255, 255), 2, cv.LINE_AA)
+
+    fps.update()
+    fps.display(frame)
+
     cv.imshow("main", frame)
 
-    timer_end = time()
-    fps_times += [ round( 1 / (timer_end - timer_start), 0) ]
-
     k = cv.waitKey(1)
-
     # Exit on ESC
     if k % 256 == 27:
         break
