@@ -2,7 +2,7 @@
 import cv2 as cv
 import numpy as np
 
-from detector import Detector, MultiThreadedDetector
+from detector import Detector
 from settings import FONT
 from utils.camera import VideoCaptureThreading
 from utils.draw import bounding_box
@@ -13,11 +13,9 @@ from utils.fps import Fps
 cap = VideoCaptureThreading()
 cap.start()
 fps = Fps()
-
-cv.namedWindow("main")
-# detector = MultiThreadedDetector() # slightly better performance 1-2 fps
 detector = Detector()
 
+cv.namedWindow("main")
 
 while True:
     ret, frame = cap.read()
@@ -46,6 +44,5 @@ while True:
         break
 
 cap.stop()
-# detector.terminate() # multi threaded
 cv.destroyAllWindows()
 
