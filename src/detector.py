@@ -22,7 +22,6 @@ class Detector:
     Example:
 
     >>> import cv2 as cv
-    >>> from utils.draw import bounding_box
     >>> from detector import MultiThreadedDetector
    
     Camera input
@@ -36,7 +35,7 @@ class Detector:
     >>> while True:
     >>>     ret, frame = cap.read()
     >>>     boxes, scores = detector.detect_objects(cv.cvtColor(frame, 4))
-    >>>     bounding_box(frame, boxes, scores)
+    >>>     # ...
     >>>     cv.imshow('Hand Detection', frame)
    
     break condition
@@ -127,13 +126,11 @@ class MultiThreadedDetector:
     Example:
 
     >>> import cv2 as cv
-    >>> from utils.draw import bounding_box
-    >>> from utils.camera import WebcamVideoStream
     >>> from detector import MultiThreadedDetector
 
     created a threaded camera input
 
-    >>> cap = WebcamVideoStream(src=0, width=200, height=300).start()
+    >>> cap = cv.VideoCapture(0)
     >>> cv.namedWindow('Multi-Threaded Detection')
 
     new instance of class
@@ -145,7 +142,7 @@ class MultiThreadedDetector:
     >>> while True:
     >>>     frame = cap.read()
     >>>     boxes, scores = mt_detector.detect_objects(cv.cvtColor(frame, 4))
-    >>>     bounding_box(frame, boxes, scores)
+    >>>     # ...
     >>>     cv.imshow('Multi-Threaded Detection', frame)
    
     break condition
@@ -156,7 +153,7 @@ class MultiThreadedDetector:
     Cleanup
 
     >>> mt_detector.terminate()
-    >>> cap.stop()
+    >>> cap.release()
     >>> cv.destroyAllWindows()
 
     """
