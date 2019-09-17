@@ -5,8 +5,7 @@ import numpy as np
 from detector import Detector
 from settings import FONT
 from utils.camera import VideoCaptureThreading
-from utils.draw import bounding_box
-from utils.draw import crop
+from utils.draw import Draw
 from utils.fps import Fps
 
 
@@ -25,10 +24,11 @@ while True:
         break
 
     if fps.nbf % 2 == 0:
-        boxes, scores = detector.detect_objects(cv.cvtColor(frame, 4))
-
-    crop(frame, boxes, scores)
-    bounding_box(frame, boxes, scores, threshold=0.2, label=True)
+        rel_boxes, scores = detector.detect_objects(cv.cvtColor(frame, 4))
+    
+    draw = Draw(frame, rel_boxes, scores)
+    draw.bounding_box()
+    draw.crop()
 
     # gesture = classify_gesture(frame)
     # cv.putText(frame, gesture, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
