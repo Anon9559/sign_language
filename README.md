@@ -35,7 +35,19 @@ $ unzip sign_mnist_train.zip
 
 ## Testing
 
-WIP
+Tests are found under `src/tests` 
+
+Running Tests:
+
+```
+ $ cd src
+ $ python -m unittest
+```
+
+#### Note
+
+Some tests produce windows in order to display images, the status of the test should be determined based on the test description.
+
 
 # TODO:
 
