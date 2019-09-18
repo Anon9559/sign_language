@@ -4,7 +4,7 @@ Project to recognise and translate sign language in real time
 ## Getting Started
 
 ```
-$ git clone https://github.com/Anon9559/sign_language
+$ git clone https://github.com/akandola96/sign_language
 ```
 
 Make a virtual environment
