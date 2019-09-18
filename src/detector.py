@@ -22,7 +22,7 @@ class Detector:
     Example:
 
     >>> import cv2 as cv
-    >>> from detector import MultiThreadedDetector
+    >>> from detector import Detector
    
     Camera input
 
