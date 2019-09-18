@@ -47,11 +47,3 @@ Running Tests:
 #### Note
 
 Some tests produce windows in order to display images, the status of the test should be determined based on the test description.
-
-
-# TODO:
-
- - [ ] Refactor ftps as decorator
- - [ ] Get Haar classifier working
- - [ ] Reevaluate CNN architecture
- - [ ] Arj to enable CUDA/GPU on PC and retrain model using 128x128 image size
