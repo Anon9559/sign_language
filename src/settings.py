@@ -17,14 +17,7 @@ FONT = FONT_HERSHEY_SIMPLEX
 # Classifier
 # ===========
 
-GESTURES = [
-   'Fist',
-   'Index',
-   'Loser',
-   'Okay',
-   'Open_5',
-   'Peace'
-]
+GESTURES = [str(x) for x in range(0,25)]
 
 
 # =========
