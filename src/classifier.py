@@ -12,7 +12,7 @@ model = load_model("./models/model_0401_4.h5")
 def classify_gesture(image):
     pred_image = image.copy()
     pred_image = np.expand_dims(pred_image, axis=0)
-    
+    pred_image = pred_image.reshape((-1, 28, 28, 1))
     image_class = model.predict(pred_image)
     
     try:
