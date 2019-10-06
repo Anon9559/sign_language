@@ -48,11 +48,10 @@ while True:
         except:
             gesture_value = 'NA'
             
-        cv.putText(frame, gesture_value, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
+        cv.putText(frame, gesture_value, (80, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
 
-     # Gets in way of prediction. Removed.
-#    fps.update()
-#    fps.display(frame)
+    fps.update()
+    fps.display(frame)
 
     cv.imshow("main", frame)
 
@@ -60,4 +59,8 @@ while True:
     # Exit on ESC
     if k % 256 == 27:
         break
+
+cap.stop()
+cv.destroyAllWindows()
+
 
