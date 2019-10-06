@@ -1,14 +1,19 @@
-
 import cv2 as cv
 import numpy as np
 
 from detector import Detector
-from classifier import classify_gesture
+from classifier import classify_gesture, classify_gesture_alt
 from settings import FONT
 from utils.camera import VideoCaptureThreading
 from utils.draw import Draw
 from utils.fps import Fps
 
+#########
+# Not sure where to put this, sorry Mike
+numbers = [x for x in range(0,24)]
+letters = ['A','B','C','D','E','F','G','H','I','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y']
+gesture_dict = dict(zip(numbers,letters))
+#########
 
 cap = VideoCaptureThreading()
 cap.start()
@@ -36,8 +41,14 @@ while True:
     
     if len(roi) > 0:
         hand = roi[0]
-        gesture = classify_gesture(hand)
-        cv.putText(frame, gesture, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
+        gesture_key = classify_gesture_alt(hand)
+        try:
+            gesture_key = int(gesture_key)
+            gesture_value = gesture_dict[gesture_key]
+        except:
+            gesture_value = 'NA'
+            
+        cv.putText(frame, gesture_value, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
 
      # Gets in way of prediction. Removed.
 #    fps.update()
@@ -49,7 +60,4 @@ while True:
     # Exit on ESC
     if k % 256 == 27:
         break
-
-cap.stop()
-cv.destroyAllWindows()
 
