@@ -11,8 +11,6 @@ model = load_model("./models/model_0401_4.h5")
 
 def classify_gesture(image):
     pred_image = image.copy()
-    pred_image = cv.cvtColor(pred_image, cv.COLOR_BGR2RGB)
-    pred_image = cv.resize(pred_image, (64, 64))
     pred_image = np.expand_dims(pred_image, axis=0)
     
     image_class = model.predict(pred_image)

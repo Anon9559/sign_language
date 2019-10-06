@@ -87,17 +87,15 @@ class Draw:
 
         Kwargs:
           pm: (int) plus minus border, increase box size
-          resize: (bool) resize image to default dimension
           dim: (tuple) dimension to resize crop to
           gray: (bool) convert image to grayscale
 
         Returns:
             (list) (ndarray) of cropped regions
         """
-        resize = kwargs.get("resize", False)
         gray = kwargs.get("gray", False)
         pm = kwargs.get("pm", 5)
-        dim = kwargs.get("dim", (96, 96))
+        dim = kwargs.get("dim", False)
 
         regions = []
         for x1, x2, y1, y2 in self.boxes:
@@ -108,7 +106,7 @@ class Draw:
 
             region = self.image[y1:y2, x1:x2]
             if gray: region = cv.cvtColor(region, 6)
-            if resize: region = cv.resize(region, dim)
+            if dim: region = cv.resize(region, dim)
 
             regions += [region]
         
