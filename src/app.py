@@ -39,9 +39,9 @@ while True:
         gesture = classify_gesture(hand)
         cv.putText(frame, gesture, (50, 32), FONT, 1, (255, 255, 255), 2, cv.LINE_AA)
 
-
-    fps.update()
-    fps.display(frame)
+     # Gets in way of prediction. Removed.
+#    fps.update()
+#    fps.display(frame)
 
     cv.imshow("main", frame)
 
