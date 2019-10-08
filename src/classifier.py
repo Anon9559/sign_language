@@ -7,7 +7,7 @@ from keras.models import load_model
 from keras.preprocessing import image
 
 
-model = load_model("./models/model_0401_4.h5")
+model = load_model("./models/89.1.h5")
 
 def classify_gesture(image):
     pred_image = image.copy()
