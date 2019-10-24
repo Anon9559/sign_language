@@ -63,5 +63,3 @@ while True:
 
 cap.stop()
 cv.destroyAllWindows()
-
-
