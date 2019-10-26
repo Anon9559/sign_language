@@ -36,7 +36,7 @@ class Draw:
     >>> cv.imshow("image", img)
     """
 
-    def __init__(self, image, rel_boxes, scores, threshold=0.2, hands=2):
+    def __init__(self, image, rel_boxes, scores, threshold=0.5, hands=2):
         self.threshold = threshold
         self.image = image
         self.height, self.width = image.shape[:2]
