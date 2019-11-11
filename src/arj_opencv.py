@@ -1,5 +1,5 @@
 #%%
-#Implementing detector
+# Implementing detector
 import numpy as np
 import cv2
 from detector import Detector
@@ -34,15 +34,40 @@ while(True):
     # Working. Needs distance though.
     draw = Draw(roi, rel_boxes, scores)
     draw.bounding_box()
+    
     hand = draw.crop(gray=True, dim=(100, 100))
     
     
     
+    resized = cv2.resize(roi,(28,28))
+    # Initialise the bounding box dimensions. Extracted later from a 
+    # diff func.
+    # Boxes are offset from actual detection though. 
     
-    # Display frames
+    dimension1 = (0,0)
+    dimension2 = (0,0)
+    my_vals = draw.bounding_box()
+    try:
+        
+        dimension1 = my_vals[0]
+        dimension2 = my_vals[1]
+        print(dimension1, dimension2)
+    except:
+        print('None')
+        
+    hand = cv2.rectangle(frame, dimension1, dimension2, (0,255,0), 3, 1)
+    
+    
+    
+    # Core frames
     cv2.imshow('frame',frame)
     cv2.imshow('roi',roi)
     cv2.imshow('edges',edges)
+    
+    # Non core frames
+    cv2.imshow('hand',hand)
+    cv2.imshow('resized',resized)
+    
    
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break

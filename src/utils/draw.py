@@ -69,17 +69,24 @@ class Draw:
           label: (bool) display label of score
           pm: (int) plus minus border, increase box size
         """
-        colour = kwargs.get("colour", (255, 0, 100))
+        colour = kwargs.get("colour", (0, 0, 255))
         label  = kwargs.get("label", True)
         pm = kwargs.get("pm", 30)
-
+        
+      
+        
         for (x1, x2, y1, y2), score in zip(self.boxes, self.scores):
-            p1 = (x1 - pm, y1 - pm)
-            p2 = (x2 + pm, y2 + pm)
-            cv.rectangle(self.image, p1, p2, colour, 3, 1)
+            
+            dimension1 = (x1 - pm, y1 - pm)
+            dimension2 = (x2 + pm, y2 + pm)
+            cv.rectangle(self.image, dimension1, dimension2, colour, 3, 1)
             if label:
                 pos = (int((x1 + x2)/2 - 10), y2 + pm + 30)
                 cv.putText(self.image, f"{score:.2f}", pos, FONT, 0.5, (255, 255, 255), 2)
+                
+            return(dimension1,dimension2)
+           
+                
 
 
     def crop(self, **kwargs):
